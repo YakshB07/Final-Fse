@@ -25,10 +25,12 @@ public class Devil extends JFrame {
 // Main class to control the game. Handles the intro, levels, gameover screen,
 // keyboard input, and all drawing. Uses other classes for specific game objects.
 class GamePanel extends JPanel implements KeyListener, ActionListener {
+    private Guy Guy = new Guy();
 
     private boolean[] keys = new boolean[2000];
     private boolean[] prevKeys = new boolean[2000]; 
     private char keyTyped;
+    private Timer timer; 
 
 
     public GamePanel() {
@@ -37,10 +39,44 @@ class GamePanel extends JPanel implements KeyListener, ActionListener {
         requestFocus();
         addKeyListener(this);
 
+        timer = new Timer(15, this);
+        timer.start();
+
     }
 
+    public void updatePlay(){
+         
+        if (keyDown(KeyEvent.VK_UP)) {
+            Guy.hop(Guy.UP);
+        } else if (keyDown(KeyEvent.VK_DOWN) && Guy.canGoDown()) {
+            Guy.hop(Guy.DOWN);
+        } else if (keyDown(KeyEvent.VK_RIGHT)) {
+            Guy.hop(Guy.RIGHT);
+        } else if (keyDown(KeyEvent.VK_LEFT)) {
+            Guy.hop(Guy.LEFT);
+        }
+        
+        Guy.update();
+
+    }
+    // public void draw(Graphics g) {
+    //     g.setColor(Color.RED);
+    //     g.fillRect((int)x, (int)y, 30, 30);
+    // }
+
+    public void drawGame(Graphics g) {
+        Guy.draw(g);
+    }
+
+     public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        drawGame(g);
+    }
+
+
     public void actionPerformed(ActionEvent e) {
-    
+        updatePlay();
+        repaint();
     }
 
 
