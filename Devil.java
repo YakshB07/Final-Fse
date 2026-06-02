@@ -1,7 +1,4 @@
-/*
- * Yaksh Butani
- * This is the main frogger file 
- */
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
