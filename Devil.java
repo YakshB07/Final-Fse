@@ -28,9 +28,13 @@ class GamePanel extends JPanel implements KeyListener, ActionListener {
     private boolean[] keys = new boolean[2000];
     private Timer timer;
 
+    private Image backImage;
+
     public GamePanel() {
-        setPreferredSize(new Dimension(700, 600));
-        setBackground(Color.WHITE);
+
+        backImage = new ImageIcon("map/map1.png").getImage();
+        setPreferredSize(new Dimension(2000, 1500));
+        // setBackground(Color.WHITE);
         setFocusable(true);
         requestFocus();
         addKeyListener(this);
@@ -50,8 +54,12 @@ class GamePanel extends JPanel implements KeyListener, ActionListener {
         guy.update(dx, jump);
 
         // keep guy inside the window left/right
-        if (guy.getX() < 0)              guy.setX(0);
-        if (guy.getX() > 700 - Guy.SIZE) guy.setX(700 - Guy.SIZE);
+        if (guy.getX() < 100){
+            guy.setX(100);
+        }
+        if (guy.getX() > 1369 - Guy.SIZE){
+            guy.setX(1369 - Guy.SIZE);
+        }
     }
 
     @Override
@@ -59,8 +67,9 @@ class GamePanel extends JPanel implements KeyListener, ActionListener {
         super.paintComponent(g);
 
         // draw ground
-        g.setColor(new Color(60, 60, 60));
-        g.fillRect(0, 562, 700, 10);
+        // g.setColor(new Color(60, 60, 60));
+        // g.fillRect(0, 562, 700, 10);
+        g.drawImage(backImage, 0, 0, getWidth(), getHeight(), null);
 
         guy.draw(g);
     }
@@ -71,7 +80,16 @@ class GamePanel extends JPanel implements KeyListener, ActionListener {
         repaint();
     }
 
-    @Override public void keyPressed(KeyEvent e)  { keys[e.getKeyCode()] = true;  }
-    @Override public void keyReleased(KeyEvent e) { keys[e.getKeyCode()] = false; }
-    @Override public void keyTyped(KeyEvent e)    { }
+    @Override 
+    public void keyPressed(KeyEvent e){ 
+        keys[e.getKeyCode()] = true;  
+    }
+    @Override 
+    public void keyReleased(KeyEvent e){ 
+        keys[e.getKeyCode()] = false; 
+    }
+    @Override 
+    public void keyTyped(KeyEvent e){ 
+
+    }
 }
