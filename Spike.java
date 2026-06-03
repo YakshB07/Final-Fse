@@ -3,30 +3,16 @@ import java.util.Random;
 import javax.swing.ImageIcon;
 
 public class Spike {
-    private int x;  // Stores the current x coordinate of the object.
-    private int y;  // Stores the current y coordinate of the object.
+    private int x;
+    private int y;  
     private int l;
     private int w;
-    private int speed;  // Stores the speed of the object.
+    private int speed;
     private Random random = new Random(); // Used to randomly generate cars.
     private Image drawedImage = null;   // Used to store images to draw onto the screen.
+    private Rectangle hitbox; 
+    private boolean death = false;
 
-    private Rectangle hitbox;   // Stores the hitbox of the moving object.
-
-    private int FrameCounter;   // Stores the frame # and used to animate.
-
-    private boolean drown = false;  // Stores if the turtle has drowned.
-
-    public static final int LEFT = -1, RIGHT = 1, CAR = 2, LOG = 3, TURTLE = 4, KILLERTURTLE = 5;   // Stores the magic numbers for the object type and direction of the moving object.
-
-    // The constructor for the moving object.
-    // Parameters:
-    // int xer - Gets the starting x coordinate of the moving object.
-    // int yer - Gets the starting y coordinate of the moving object.
-    // int l - Gets the thickness of the moving object.
-    // int sped - Gets the speed of the moving object.
-    // int spce - Gets the spacing between the moving objects.
-    // int objct - Gets the object type of the moving object.
     public Spike(int x, int y, int l, int w, int speed){
         this.x = x;
         this.y = y;
@@ -77,7 +63,11 @@ public class Spike {
         }
         hitbox = new Rectangle(x, y, l, w);
     }
-    
+
+    public void died(Guy guy){
+        if()
+    }
+
     public void draw(Graphics g){
         Graphics2D g2 = (Graphics2D)g;
         // Draws if its a vehicle.
