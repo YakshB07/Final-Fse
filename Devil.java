@@ -1,19 +1,19 @@
 /*
  * Yaksh Butani
- * This is the main frogger file 
+ * Level Devil main file
  */
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
 public class Devil extends JFrame {
-
     public Devil() {
         super("Level Devil");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         GamePanel game = new GamePanel();
         add(game);
         pack();
+        setLocationRelativeTo(null);
         setVisible(true);
     }
 
@@ -22,79 +22,56 @@ public class Devil extends JFrame {
     }
 }
 
-// Main class to control the game. Handles the intro, levels, gameover screen,
-// keyboard input, and all drawing. Uses other classes for specific game objects.
 class GamePanel extends JPanel implements KeyListener, ActionListener {
-    private Guy Guy = new Guy();
 
+    private Guy guy = new Guy();
     private boolean[] keys = new boolean[2000];
-    private boolean[] prevKeys = new boolean[2000]; 
-    private char keyTyped;
-    private Timer timer; 
-
+    private Timer timer;
 
     public GamePanel() {
-        setPreferredSize(new Dimension(700, 830));
+        setPreferredSize(new Dimension(700, 600));
+        setBackground(Color.WHITE);
         setFocusable(true);
         requestFocus();
         addKeyListener(this);
-
         timer = new Timer(15, this);
         timer.start();
-
     }
 
-    public void updatePlay(){
-         
-        if (keyDown(KeyEvent.VK_UP)) {
-            Guy.hop(Guy.UP);
-        } else if (keyDown(KeyEvent.VK_DOWN) && Guy.canGoDown()) {
-            Guy.hop(Guy.DOWN);
-        } else if (keyDown(KeyEvent.VK_RIGHT)) {
-            Guy.hop(Guy.RIGHT);
-        } else if (keyDown(KeyEvent.VK_LEFT)) {
-            Guy.hop(Guy.LEFT);
-        }
-        
-        Guy.update();
+    public void updatePlay() {
+        // left/right input
+        int dx = 0;
+        if (keys[KeyEvent.VK_LEFT])  dx = -1;
+        if (keys[KeyEvent.VK_RIGHT]) dx =  1;
 
-    }
-    // public void draw(Graphics g) {
-    //     g.setColor(Color.RED);
-    //     g.fillRect((int)x, (int)y, 30, 30);
-    // }
+        // jump input
+        boolean jump = keys[KeyEvent.VK_UP];
 
-    public void drawGame(Graphics g) {
-        Guy.draw(g);
+        guy.update(dx, jump);
+
+        // keep guy inside the window left/right
+        if (guy.getX() < 0)              guy.setX(0);
+        if (guy.getX() > 700 - Guy.SIZE) guy.setX(700 - Guy.SIZE);
     }
 
-     public void paintComponent(Graphics g) {
+    @Override
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        drawGame(g);
+
+        // draw ground
+        g.setColor(new Color(60, 60, 60));
+        g.fillRect(0, 562, 700, 10);
+
+        guy.draw(g);
     }
 
-
+    @Override
     public void actionPerformed(ActionEvent e) {
         updatePlay();
         repaint();
     }
 
-
-    public void keyPressed(KeyEvent e) {
-        keys[e.getKeyCode()] = true;
-    }
-
-    public void keyReleased(KeyEvent e) {
-        keys[e.getKeyCode()] = false;
-    }
-
-    public void keyTyped(KeyEvent e) {
-        keyTyped = e.getKeyChar();
-    }
-
-    // returns true only on the first tick a key is pressed
-    // comparing to prevKeys means holding a key doesnt keep firing
-    public boolean keyDown(int code) {
-        return keys[code] && !prevKeys[code];
-    }
+    @Override public void keyPressed(KeyEvent e)  { keys[e.getKeyCode()] = true;  }
+    @Override public void keyReleased(KeyEvent e) { keys[e.getKeyCode()] = false; }
+    @Override public void keyTyped(KeyEvent e)    { }
 }

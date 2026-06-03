@@ -1,186 +1,157 @@
 import java.awt.*;
+import java.awt.geom.*;
 import javax.swing.*;
+
 public class Guy {
 
-    public static final int UP = 0;
-    public static final int RIGHT = 1;
-    public static final int DOWN = 2;
-    public static final int LEFT = 3;
+    public static final int SIZE = 32;
 
     public final int STARTX = 300;
-    public final int STARTY = 100;
+    public final int STARTY = 530;
 
+    private static final double GRAVITY    = 0.7;
+    private static final double JUMP_POWER = -14.0;
+    private static final double WALK_SPEED = 4.0;
+    private static final int    GROUND_Y   = 530;
 
     private double x, y;
-    private int dir;
-    private int frame;        // which animation frame to draw (0 = still, 1 = mid-hop)
-    private int hopTick;      // counts ticks during a hop (each hop takes 10 ticks)
-    private int deathTick;    // separate counter for the death animation so it doesnt mix with hopTick
-    private boolean jumping;
+    private double velY;
+    private boolean onGround;
     private boolean alive;
+    private boolean facingLeft;
     private int lives;
 
-    private Image[] pics; 
-
+    private int walkTick;
+    private int frame; 
+    private Image[] pics;
 
     public Guy() {
-        
-        pics = new Image[4];
-        for (int i = 1; i < 4; i++) {
+        pics = new Image[3];
+        for (int i = 0; i < 3; i++) {
             pics[i] = new ImageIcon("man/man" + i + ".png").getImage();
         }
-        for (int i = 0; i < 4; i++) {
-            pics[i] = new ImageIcon("man/man" + i + ".png").getImage();
-            System.out.println(pics[i].getWidth(null));
-        }
-
         fullReset();
     }
 
-    // resets position and timer for a new life, but keeps the lives count
     public void respawn() {
         x = STARTX;
         y = STARTY;
-        dir = RIGHT;
-        jumping = true;   // starts jumping so the guy pops into the scene
+        velY = 0;
+        onGround = true;
         alive = true;
-        frame = 0;
-        hopTick = 0;
-        deathTick = 0;
-}
+        facingLeft = false;
+        walkTick = 0;
+        frame = 1;
+    }
 
-    // full reset including lives - called when starting a new game
     public void fullReset() {
         lives = 3;
         respawn();
     }
 
-    // starts a hop in the given direction, only if not already jumping
-    public void hop(int direction) {
-        if (!jumping && alive) {
-            dir = direction;
-            jumping = true;
-            hopTick = 0;
-            frame = 1; // show the mid-jump frame while jumping
-        }
-    }
-
-    // called every tick - moves the frog during a hop and plays the death animation when dead
-    public void update() {
-        if (alive && jumping) {
-            // move 5px per tick in the hop direction
-            // each hop takes 10 ticks so the frog moves 50px total per hop
-            if (dir == UP) y -= 5;
-            if (dir == DOWN) y += 5;
-            if (dir == LEFT) x -= 5;
-            if (dir == RIGHT) x += 5;
-
-            hopTick++;
-            if (hopTick == 8) frame = 0;    // switch to landing frame near the end of the hop
-            if (hopTick >= 10) jumping = false; // hop is complete
-        }
-
-        // death animation - advance a frame every 10 ticks
+    public void update(int dx, boolean jump) {
         if (!alive) {
-            deathTick++;
-            if (deathTick % 10 == 0) {
-                frame++;
+            return;
+        }
+
+        if (dx != 0) {
+            x += dx * WALK_SPEED;
+            facingLeft = (dx < 0);
+        }
+
+        if (jump && onGround) {
+            velY = JUMP_POWER;
+            onGround = false;
+        }
+
+        velY += GRAVITY;
+        y += velY;
+
+        // stop at the ground
+        if (y >= GROUND_Y) {
+            y = GROUND_Y;
+            velY = 0;
+            onGround = true;
+        }
+
+        if (!onGround) {
+            if (velY < 0) {
+                frame = 2;
+            } else {
+                frame = 1;
             }
-            // once all death frames are done, lose a life and respawn
-            // if (frame >= deathPics.length) {
-            //     lives--;
-            //     respawn();
-            //     if (lives > 0) {
-            //         respawnSound.play();
-            //     }
-            // }
+        } else if (dx != 0) {
+            walkTick = (walkTick + 1) % 28;
+            if (walkTick < 7) {
+                frame = 1;
+            } else if (walkTick < 14) {
+                frame = 2;
+            } else if (walkTick < 21) {
+                frame = 1;
+            } else {
+                frame = 2;
+            }
+        } else {
+            // standing still
+            frame = 1;
+            walkTick = 0;
         }
     }
 
-    // triggers the death animation and plays the right sound
-    public void die() {
-        if (!alive) return; // already dead, dont trigger again
-        alive = false;
-        jumping = false;
-        frame = 0;
-        deathTick = 0;
+    public void setX(double v) {
+        x = v;
     }
 
-    // moves the frog sideways with a log or turtle
-    // we dont drift if the frog is jumping vertically, otherwise it would slide sideways mid-jump
-    public void drift(double amount) {
-        if (!jumping || (dir != UP && dir != DOWN)) {
-            x += amount;
-        }
+    public void setY(double v) {
+        y = v;
     }
 
-    public boolean isAlive() { 
-        return alive; 
-    }
-    public boolean isHopping() { 
-        return jumping; 
-    }
-    public int getLives() { 
-        return lives; 
-    }
-    public void setLives(int n) { 
-        lives = n; 
-    }
-    public double getY() { 
-        return y; 
-    }
-    public Image getStillImage() { 
-        return pics[0]; 
+    public void setVelY(double v) {
+        velY = v;
     }
 
-    // the river section is above y = 420 on screen
-    public boolean inWater() {
-        return y < 420 && alive;
+    public void setOnGround(boolean b) {
+        onGround = b;
     }
 
-    public boolean isOnScreen() {
-        return x >= 0 && x <= 670;
+    public double getX() {
+        return x;
     }
 
-    // prevents the frog from jumping backward past the starting row
-    public boolean canGoDown() {
-        return y < STARTY - 50;
+    public double getY() {
+        return y;
     }
 
-    // // returns true the first time the frog moves into a new higher row
-    // // used to give the player +10 points per forward lane
-    // public boolean reachedNewLane() {
-    //     if (y < highestY - 49 && y > 200) {
-    //         highestY = y; // update so we dont count the same row twice
-    //         return true;
-    //     }
-    //     return false;
-    // }
+    public double getVelY() {
+        return velY;
+    }
 
-    // // checks if the frog's hitbox overlaps any of the 5 lily pad x positions at y=130
-    // public int getPadIndex() {
-    //     Rectangle hb = getHitbox();
-    //     for (int i = 0; i < PAD_X.length; i++) {
-    //         if (hb.contains(PAD_X[i], 130)) {
-    //             return i;
-    //         }
-    //     }
-    //     return -1;
-    // }
+    public boolean isOnGround() {
+        return onGround;
+    }
 
-    // // the hitbox is a 30x30 box at the frog's current position
-    // public Rectangle getHitbox() {
-    //     return new Rectangle((int)x, (int)y, 30, 30);
-    // }
+    public boolean isAlive() {
+        return alive;
+    }
+
+    public int getLives() {
+        return lives;
+    }
 
     public void draw(Graphics g) {
-        g.drawImage(pics[frame], (int)x, (int)y, 100, 100, null);
+        Graphics2D g2 = (Graphics2D) g;
+        int drawX = (int) x;
+        int drawY = (int) y;
+
+        if (facingLeft) {
+            // flip the image horizontally when going left
+            AffineTransform old = g2.getTransform();
+            g2.translate(drawX + SIZE, drawY);
+            g2.scale(-1, 1);
+            g2.drawImage(pics[frame], 0, 0, SIZE, SIZE, null);
+            g2.setTransform(old);
+        } else {
+            g2.drawImage(pics[frame], drawX, drawY, SIZE, SIZE, null);
+        }
     }
-
-//     public void draw(Graphics g) {
-//         // System.out.println("draw called");
-
-//         g.setColor(Color.RED);
-//         g.fillRect((int)x, (int)y, 30, 30);
-//     }
 }
