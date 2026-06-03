@@ -4,15 +4,15 @@ import javax.swing.*;
 
 public class Guy {
 
-    public static final int SIZE = 32;
+    public static final int SIZE = 35;
 
     public final int STARTX = 300;
-    public final int STARTY = 469;
+    public final int STARTY = 466;
 
     private static final double GRAVITY    = 0.7;
-    private static final double JUMP_POWER = -14.0;
+    private static final double JUMP_POWER = -13.5;
     private static final double WALK_SPEED = 4.0;
-    private static final int    GROUND_Y   = 469;
+    private static final int GROUND_Y   = 466;
 
     private double x, y;
     private double velY;
