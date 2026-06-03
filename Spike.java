@@ -36,23 +36,48 @@ public class Spike {
         hitbox = new Rectangle(x, y, l, w);
     }
 
-    // Moves the object and resets it when it goes off screen.
-    // Has no parameters and returns nothing.
-    public void move(){
-        if(speed < 0 && x < space * -1 - thickness){
-            x = 700 + space + thickness;
+    public void moveX(int dist){
+        int currentdist = 0;
+        if(speed < 0){
+            if(currentdist + speed * -1 >= dist){
+                x -= dist - currentdist;
+            }
+            else{
+                x -= speed;
+            }
         }
-        if(speed > 0 && x > 700 + space + thickness){
-            x = 0 - space - thickness;
+        if(speed > 0){
+            if(currentdist + speed >= dist){
+                x += dist - currentdist;
+            }
+            else{
+                x += speed;
+            }
         }
-        x += speed;
-        hitbox = new Rectangle(x, y, thickness, 50);
+        hitbox = new Rectangle(x, y, l, w);
     }
 
-    // Draws all itself on the screen. 
-    // Parameters:
-    // Graphics g - The tool used to draw on the screen.
-    // returns nothing.
+    public void moveY(int dist){
+        int currentdist = 0;
+        if(speed < 0){
+            if(currentdist + speed * -1 >= dist){
+                y -= dist - currentdist;
+            }
+            else{
+                y -= speed;
+            }
+        }
+        if(speed > 0){
+            if(currentdist + speed >= dist){
+                y += dist - currentdist;
+            }
+            else{
+                y += speed;
+            }
+        }
+        hitbox = new Rectangle(x, y, l, w);
+    }
+    
     public void draw(Graphics g){
         Graphics2D g2 = (Graphics2D)g;
         // Draws if its a vehicle.
@@ -70,81 +95,6 @@ public class Spike {
             }
             else{
                 g2.drawImage(drawedImage, x + thickness, y, -thickness, 50, null);
-            }
-        }
-        // Draws if its a log.
-        else if(objecttype == LOG){
-            int logs = thickness / 50;
-            for(int i = 0; i < logs; i++){
-                if(i == 0){
-                    drawedImage = new ImageIcon("logsprite/logsprite0.png").getImage();
-                    g2.drawImage(drawedImage, x, y, 50, 50, null);
-                }
-                else if(i == logs - 1){
-                    drawedImage = new ImageIcon("logsprite/logsprite2.png").getImage();
-                    g2.drawImage(drawedImage, x + (i * 50), y, 50, 50, null);
-                }
-                else{
-                    drawedImage = new ImageIcon("logsprite/logsprite1.png").getImage();
-                    g2.drawImage(drawedImage, x + (i * 50), y, 50, 50, null);
-                }
-            }
-        }
-        // Draws if its a turtle.
-        else if(objecttype == TURTLE){
-            FrameCounter += 1;
-
-            if(FrameCounter >= 0 && FrameCounter <= 6){
-                drawedImage = new ImageIcon("turtlesprite/turtlesprite0.png").getImage();
-            }
-            else if(FrameCounter > 6 && FrameCounter <= 12){
-                drawedImage = new ImageIcon("turtlesprite/turtlesprite1.png").getImage();
-            }
-            else if(FrameCounter > 12 && FrameCounter <= 18){
-                drawedImage = new ImageIcon("turtlesprite/turtlesprite2.png").getImage();
-            }
-            else{
-                FrameCounter = 0;
-            }
-            int turtles = thickness / 50;
-            for(int i = 0; i < turtles; i++){
-                g2.drawImage(drawedImage, x + (i * 50), y, 50, 50, null);
-            }
-        }
-        // Draws if its a killer turtle.
-        else if(objecttype == KILLERTURTLE){
-            FrameCounter += 1;
-
-            if(FrameCounter >= 0 && FrameCounter <= 6){
-                drawedImage = new ImageIcon("turtlesprite/turtlesprite0.png").getImage();
-                drown = false;
-            }
-            else if(FrameCounter > 6 && FrameCounter <= 12){
-                drawedImage = new ImageIcon("turtlesprite/turtlesprite1.png").getImage();
-                drown = false;
-            }
-            else if(FrameCounter > 12 && FrameCounter <= 18){
-                drawedImage = new ImageIcon("turtlesprite/turtlesprite2.png").getImage();
-                drown = false;
-            }
-            else if(FrameCounter > 18 && FrameCounter <= 24){
-                drawedImage = new ImageIcon("turtlesprite/turtlesprite3.png").getImage();
-                drown = false;
-            }
-            else if(FrameCounter > 24 && FrameCounter <= 30){
-                drawedImage = new ImageIcon("turtlesprite/turtlesprite4.png").getImage();
-                drown = false;
-            }
-            else if(FrameCounter > 30 && FrameCounter <= 36){
-                drawedImage = null;
-                drown = true;
-            }
-            else{
-                FrameCounter = 0;
-            }
-            int turtles = thickness / 50;
-            for(int i = 0; i < turtles; i++){
-                g2.drawImage(drawedImage, x + (i * 50), y, 50, 50, null);
             }
         }    
     }
