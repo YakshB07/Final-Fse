@@ -5,6 +5,7 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import java.awt.image.*; 
 
 public class Devil extends JFrame {
     public Devil() {
@@ -26,6 +27,7 @@ class GamePanel extends JPanel implements KeyListener, ActionListener {
 
     private Guy guy = new Guy();
     private boolean[] keys = new boolean[2000];
+    private BufferedImage mask;
     private Timer timer;
 
     private Image backImage;
@@ -35,7 +37,7 @@ class GamePanel extends JPanel implements KeyListener, ActionListener {
 
         backImage = new ImageIcon("map/map1.png").getImage();
         spikes = new ImageIcon("spike.png").getImage();
-        setPreferredSize(new Dimension(2000, 1500));
+        setPreferredSize(new Dimension(1500, 750));
         // setBackground(Color.WHITE);
         setFocusable(true);
         requestFocus();
@@ -72,7 +74,7 @@ class GamePanel extends JPanel implements KeyListener, ActionListener {
         // g.setColor(new Color(60, 60, 60));
         // g.fillRect(0, 562, 700, 10);
         g.drawImage(backImage, 0, 0, getWidth(), getHeight(), null);
-        g.drawImage(spikes, 700,471, 80,30,null);
+        g.drawImage(spikes, 700,421, 80,30,null);
         guy.draw(g);
     }
 

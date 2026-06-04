@@ -1,18 +1,22 @@
 import java.awt.*;
 import java.awt.geom.*;
 import javax.swing.*;
+import java.awt.event.*;
+import javax.imageio.*;
+import java.awt.image.*; 
+import java.io.*; 
 
 public class Guy {
 
     public static final int SIZE = 35;
 
     public final int STARTX = 300;
-    public final int STARTY = 466;
+    public final int STARTY = 416;
 
     private static final double GRAVITY    = 0.7;
     private static final double JUMP_POWER = -13.5;
     private static final double WALK_SPEED = 4.0;
-    private static final int GROUND_Y   = 466;
+    private static final int GROUND_Y   = 416;
 
     private double x, y;
     private double velY;
@@ -25,12 +29,21 @@ public class Guy {
     private int frame; 
     private Image[] pics;
 
+    private BufferedImage map1mask;
+
     public Guy() {
         pics = new Image[3];
         for (int i = 0; i < 3; i++) {
             pics[i] = new ImageIcon("man/man" + i + ".png").getImage();
         }
         fullReset();
+
+        try {
+    		map1mask = ImageIO.read(new File("map/map1mask.png"));
+		} 
+		catch (IOException e) {
+			System.out.println(e);
+		}
     }
 
     public void respawn() {
@@ -54,7 +67,7 @@ public class Guy {
             return;
         }
 
-        if (dx != 0) {
+        if (dx != 0 && clear((int)x - SIZE, (int)y - SIZE)) {
             x += dx * WALK_SPEED;
             facingLeft = (dx < 0);
         }
@@ -68,7 +81,8 @@ public class Guy {
         y += velY;
 
         // stop at the ground
-        if (y >= GROUND_Y) {
+        // if (clear((int)x, (int)y + SIZE)) {
+        if (!clear((int)x, (int)y - SIZE) && !jump) {
             y = GROUND_Y;
             velY = 0;
             onGround = true;
@@ -96,7 +110,21 @@ public class Guy {
             frame = 1;
             walkTick = 0;
         }
+        //System.out.println(jump && onGround);
     }
+
+    private boolean clear(int x, int y){
+		int WALL = 0xFF0000FF;
+		/* colour in Java is ARGB. You can use a Color object, or just a single int. As an int
+		 * it is best to use hexadecimal. Each component is 8 bits, that is 0-256 in decimal,
+		 * or 0-FF in hex. My walls are blue in my mask. 
+		 **/
+		if(x<0 || x>= map1mask.getWidth(null) || y<0 || y>= map1mask.getHeight(null)){
+			return false;
+		}
+		int c = map1mask.getRGB(x, y);
+		return c != WALL;
+	}	
 
     public void setX(double v) {
         x = v;
@@ -137,6 +165,8 @@ public class Guy {
     public int getLives() {
         return lives;
     }
+
+
 
     public void draw(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
