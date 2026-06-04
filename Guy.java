@@ -67,7 +67,7 @@ public class Guy {
             return;
         }
 
-        if (dx != 0 && clear((int)x - SIZE, (int)y - SIZE)) {
+        if (dx != 0 && clear((int)(x + dx * WALK_SPEED), (int)y)){
             x += dx * WALK_SPEED;
             facingLeft = (dx < 0);
         }
@@ -81,8 +81,7 @@ public class Guy {
         y += velY;
 
         // stop at the ground
-        // if (clear((int)x, (int)y + SIZE)) {
-        if (!clear((int)x, (int)y - SIZE) && !jump) {
+        if (!clear((int)x, (int)(y + SIZE))) {
             y = GROUND_Y;
             velY = 0;
             onGround = true;
@@ -114,17 +113,21 @@ public class Guy {
     }
 
     private boolean clear(int x, int y){
-		int WALL = 0xFF0000FF;
+        int WALL = 0xFF0000FF;
+        
 		/* colour in Java is ARGB. You can use a Color object, or just a single int. As an int
 		 * it is best to use hexadecimal. Each component is 8 bits, that is 0-256 in decimal,
 		 * or 0-FF in hex. My walls are blue in my mask. 
 		 **/
-		if(x<0 || x>= map1mask.getWidth(null) || y<0 || y>= map1mask.getHeight(null)){
-			return false;
-		}
-		int c = map1mask.getRGB(x, y);
-		return c != WALL;
-	}	
+        int maskX = x * map1mask.getWidth() / 1500;
+        int maskY = y * map1mask.getHeight() / 750;
+        
+        if(maskX < 0 || maskX >= map1mask.getWidth() || maskY < 0 || maskY >= map1mask.getHeight()){
+            return false;
+        }
+        int c = map1mask.getRGB(maskX, maskY);
+        return c != WALL;
+    }
 
     public void setX(double v) {
         x = v;
