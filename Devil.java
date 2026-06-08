@@ -4,8 +4,7 @@
  */
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.*;
-import javax.swing.*; 
+import javax.swing.*;
 
 public class Devil extends JFrame {
     public Devil() {
@@ -17,101 +16,70 @@ public class Devil extends JFrame {
         setLocationRelativeTo(null);
         setVisible(true);
     }
-
     public static void main(String[] args) {
         new Devil();
     }
 }
 
+interface Level {
+    void reset();
+    void update(Guy guy);
+    void draw(Graphics g, int panelWidth, int panelHeight);
+    boolean isFinished();
+}
+
 class GamePanel extends JPanel implements KeyListener, ActionListener {
-
     private Guy guy = new Guy();
-    private Spike spike1 = new Spike(700, 421, 80, 30, 0);
     private boolean[] keys = new boolean[2000];
-    private BufferedImage mask;
     private Timer timer;
-    private int level = 1;
-    private int spikeX = 700;
-    private int doorX = 1245;
-    private boolean spikemoved = false;
-
-    private Image backImage;
-    private Image spikes;
+    private int currentLevel = 0;
+    private Level[] levels = {new Level1(), new Level2()};
 
     public GamePanel() {
-
-        backImage = new ImageIcon("map/map1.png").getImage();
-        spikes = new ImageIcon("spike.png").getImage();
         setPreferredSize(new Dimension(1500, 750));
-        // setBackground(Color.WHITE);
         setFocusable(true);
         requestFocus();
         addKeyListener(this);
+        for (Level lvl : levels) {
+            lvl.reset();
+        }
         timer = new Timer(15, this);
         timer.start();
     }
 
     public void updatePlay() {
-
-        System.out.println(guy.getX() + " " + guy.getY());
-        // left/right input
         int dx = 0;
-        if (keys[KeyEvent.VK_LEFT])  dx = -1;
-        if (keys[KeyEvent.VK_RIGHT]) dx =  1;
-
-        // jump input
+        if (keys[KeyEvent.VK_LEFT]){
+            dx = -1;
+        }
+        if (keys[KeyEvent.VK_RIGHT]){
+            dx = 1;
+        }
         boolean jump = keys[KeyEvent.VK_UP];
 
         guy.update(dx, jump);
 
-        // keep guy inside the window left/right
-        if (guy.getX() < 100){
+        if (guy.getX() < 100) {
             guy.setX(100);
         }
-        if (guy.getX() > 1369 - Guy.SIZE){
+        if (guy.getX() > 1369 - Guy.SIZE) {
             guy.setX(1369 - Guy.SIZE);
         }
 
-
-        if(level == 1 ){
-            if (guy.getX() > spikeX - 180 && !spikemoved) {
-                spikemoved = true;
-                spikeX = spikeX - 75;
-                spike1.move(spikeX, 421);
-            }
-            if(spike1.died(guy)){
-                guy.respawn();
-                spikeX = 700;
-                spikemoved = false;
-                spike1.move(spikeX, 421);
-            }
-            if(guy.getX() > doorX){
-                level = 2;
-            }
-            System.out.println(spike1.died(guy));
-        }
-
-        if(level == 2){
+        levels[currentLevel].update(guy);
+        
+        if (levels[currentLevel].isFinished() && currentLevel < levels.length - 1) {
+            currentLevel++;
             guy.respawn();
+            levels[currentLevel].reset();
         }
     }
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-
-        if(level == 1){
-            g.drawImage(backImage, 0, 0, getWidth(), getHeight(), null);
-            g.drawImage(spikes, spikeX, 421, 80, 30, null);
-        }
-        if(level == 2){
-            g.setColor(Color.BLACK);
-            g.fillRect(0, 0, getWidth(), getHeight());
-        }
-
-
+        levels[currentLevel].draw(g, getWidth(), getHeight());
         guy.draw(g);
-        spike1.draw(g);
     }
 
     @Override
@@ -120,16 +88,17 @@ class GamePanel extends JPanel implements KeyListener, ActionListener {
         repaint();
     }
 
-    @Override 
-    public void keyPressed(KeyEvent e){ 
-        keys[e.getKeyCode()] = true;  
+    @Override
+    public void keyPressed(KeyEvent e) {
+        keys[e.getKeyCode()] = true;
     }
-    @Override 
-    public void keyReleased(KeyEvent e){ 
-        keys[e.getKeyCode()] = false; 
-    }
-    @Override 
-    public void keyTyped(KeyEvent e){ 
 
+    @Override
+    public void keyReleased(KeyEvent e) {
+        keys[e.getKeyCode()] = false;
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
     }
 }
