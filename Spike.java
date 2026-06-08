@@ -9,7 +9,7 @@ public class Spike {
     private int w;
     private int speed;
     private Random random = new Random(); // Used to randomly generate cars.
-    private Image drawedImage = null;   // Used to store images to draw onto the screen.
+    private Image drawedImage = new ImageIcon("Spike.png").getImage();  
     private Rectangle hitbox; 
     private boolean death = false;
 
@@ -22,70 +22,19 @@ public class Spike {
         hitbox = new Rectangle(x, y, l, w);
     }
 
-    public void moveX(int dist){
-        int currentdist = 0;
-        if(speed < 0){
-            if(currentdist + speed * -1 >= dist){
-                x -= dist - currentdist;
-            }
-            else{
-                x -= speed;
-            }
-        }
-        if(speed > 0){
-            if(currentdist + speed >= dist){
-                x += dist - currentdist;
-            }
-            else{
-                x += speed;
-            }
-        }
+    public void move(int xer, int yer){
+        x = xer;
+        y = yer;
         hitbox = new Rectangle(x, y, l, w);
     }
 
-    public void moveY(int dist){
-        int currentdist = 0;
-        if(speed < 0){
-            if(currentdist + speed * -1 >= dist){
-                y -= dist - currentdist;
-            }
-            else{
-                y -= speed;
-            }
-        }
-        if(speed > 0){
-            if(currentdist + speed >= dist){
-                y += dist - currentdist;
-            }
-            else{
-                y += speed;
-            }
-        }
-        hitbox = new Rectangle(x, y, l, w);
-    }
-
-    public void died(Guy guy){
-        if()
+    public boolean died(Guy guy){
+        return guy.returnRect().intersects(hitbox);
     }
 
     public void draw(Graphics g){
         Graphics2D g2 = (Graphics2D)g;
-        // Draws if its a vehicle.
-        if(objecttype == CAR){
-            int car = random.nextInt(4);
-            if(thickness >= 75 && thickness <= 100){
-                drawedImage = new ImageIcon("vehicles/vehicles4.png").getImage();
-            }
-            else if(drawedImage == null){
-                drawedImage = new ImageIcon("vehicles/vehicles" + car + ".png").getImage();
-            }
-            
-            if(speed < 0){
-                g2.drawImage(drawedImage, x, y, thickness, 50, null);
-            }
-            else{
-                g2.drawImage(drawedImage, x + thickness, y, -thickness, 50, null);
-            }
-        }    
+        g2.setColor(Color.red);
+        g2.drawRect(x, y, l, w);
     }
 }

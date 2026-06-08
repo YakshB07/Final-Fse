@@ -25,6 +25,8 @@ public class Guy {
     private boolean facingLeft;
     private int lives;
 
+    private Rectangle hitbox;
+
     private int walkTick;
     private int frame; 
     private Image[] pics;
@@ -44,6 +46,12 @@ public class Guy {
 		catch (IOException e) {
 			System.out.println(e);
 		}
+
+        hitbox = new Rectangle((int)x, (int)y, SIZE, SIZE);
+    }
+
+    public Rectangle returnRect(){
+        return hitbox;
     }
 
     public void respawn() {
@@ -109,7 +117,8 @@ public class Guy {
             frame = 1;
             walkTick = 0;
         }
-        //System.out.println(jump && onGround);
+        
+        hitbox = new Rectangle((int)x, (int)y, SIZE, SIZE);
     }
 
     private boolean clear(int x, int y){

@@ -26,6 +26,7 @@ public class Devil extends JFrame {
 class GamePanel extends JPanel implements KeyListener, ActionListener {
 
     private Guy guy = new Guy();
+    private Spike spike1 = new Spike(700, 421, 80, 30, 0);
     private boolean[] keys = new boolean[2000];
     private BufferedImage mask;
     private Timer timer;
@@ -76,29 +77,39 @@ class GamePanel extends JPanel implements KeyListener, ActionListener {
             if (guy.getX() > spikeX - 180 && !spikemoved) {
                 spikemoved = true;
                 spikeX = spikeX - 75;
+                spike1.move(spikeX, 421);
             }
             // check spike collisions
-            int guyLeft = (int) guy.getX();
-            int guyTop = (int) guy.getY();
-            int guyRight = guyLeft + Guy.SIZE;
-            int guyBottom = guyTop + Guy.SIZE;
+            // int guyLeft = (int) guy.getX();
+            // int guyTop = (int) guy.getY();
+            // int guyRight = guyLeft + Guy.SIZE;
+            // int guyBottom = guyTop + Guy.SIZE;
     
-            int spikeRight  = spikeX + 80;
-            int spikeBottom = 421 + 30;
+            // int spikeRight  = spikeX + 80;
+            // int spikeBottom = 421 + 30;
     
-            boolean hitSpike = false;
-            if (guyRight > spikeX && guyLeft < spikeRight) {
-                if (guyBottom > 421 && guyTop < spikeBottom) {
-                    hitSpike = true;
-                }
-            }
+            // boolean hitSpike = false;
+            // if (guyRight > spikeX && guyLeft < spikeRight) {
+            //     if (guyBottom > 421 && guyTop < spikeBottom) {
+            //         hitSpike = true;
+            //     }
+            // }
     
-            if (hitSpike) {
+            // if (hitSpike) {
+            //     guy.respawn();
+            //     spikeX = 700; 
+            //     spikemoved = false;
+    
+            // }
+
+            if(spike1.died(guy)){
                 guy.respawn();
-                spikeX = 700; 
+                spikeX = 700;
                 spikemoved = false;
-    
+                spike1.move(spikeX, 421);
             }
+
+            System.out.println(spike1.died(guy));
         }
     }
 
@@ -116,6 +127,7 @@ class GamePanel extends JPanel implements KeyListener, ActionListener {
 
 
         guy.draw(g);
+        spike1.draw(g);
     }
 
     @Override
