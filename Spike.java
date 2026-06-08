@@ -28,6 +28,12 @@ public class Spike {
         hitbox = new Rectangle(x, y, l, w);
     }
 
+    public void moveX(int dist){
+        if(speed > 0){
+            
+        }
+    }
+
     public boolean died(Guy guy){
         return guy.returnRect().intersects(hitbox);
     }
