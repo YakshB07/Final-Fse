@@ -79,37 +79,20 @@ class GamePanel extends JPanel implements KeyListener, ActionListener {
                 spikeX = spikeX - 75;
                 spike1.move(spikeX, 421);
             }
-            // check spike collisions
-            // int guyLeft = (int) guy.getX();
-            // int guyTop = (int) guy.getY();
-            // int guyRight = guyLeft + Guy.SIZE;
-            // int guyBottom = guyTop + Guy.SIZE;
-    
-            // int spikeRight  = spikeX + 80;
-            // int spikeBottom = 421 + 30;
-    
-            // boolean hitSpike = false;
-            // if (guyRight > spikeX && guyLeft < spikeRight) {
-            //     if (guyBottom > 421 && guyTop < spikeBottom) {
-            //         hitSpike = true;
-            //     }
-            // }
-    
-            // if (hitSpike) {
-            //     guy.respawn();
-            //     spikeX = 700; 
-            //     spikemoved = false;
-    
-            // }
-
             if(spike1.died(guy)){
                 guy.respawn();
                 spikeX = 700;
                 spikemoved = false;
                 spike1.move(spikeX, 421);
             }
-
+            if(guy.getX() > doorX){
+                level = 2;
+            }
             System.out.println(spike1.died(guy));
+        }
+
+        if(level == 2){
+            guy.respawn();
         }
     }
 
@@ -117,12 +100,13 @@ class GamePanel extends JPanel implements KeyListener, ActionListener {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        // draw ground
-        // g.setColor(new Color(60, 60, 60));
-        // g.fillRect(0, 562, 700, 10);
         if(level == 1){
             g.drawImage(backImage, 0, 0, getWidth(), getHeight(), null);
             g.drawImage(spikes, spikeX, 421, 80, 30, null);
+        }
+        if(level == 2){
+            g.setColor(Color.BLACK);
+            g.fillRect(0, 0, getWidth(), getHeight());
         }
 
 
