@@ -4,8 +4,8 @@
  */
 import java.awt.*;
 import java.awt.event.*;
-import javax.swing.*;
-import java.awt.image.*; 
+import java.awt.image.*;
+import javax.swing.*; 
 
 public class Devil extends JFrame {
     public Devil() {
@@ -29,6 +29,10 @@ class GamePanel extends JPanel implements KeyListener, ActionListener {
     private boolean[] keys = new boolean[2000];
     private BufferedImage mask;
     private Timer timer;
+    private int level = 1;
+    private int spikeX = 700;
+    private int doorX = 1245;
+    private boolean spikemoved = false;
 
     private Image backImage;
     private Image spikes;
@@ -47,6 +51,8 @@ class GamePanel extends JPanel implements KeyListener, ActionListener {
     }
 
     public void updatePlay() {
+
+        System.out.println(guy.getX() + " " + guy.getY());
         // left/right input
         int dx = 0;
         if (keys[KeyEvent.VK_LEFT])  dx = -1;
@@ -64,6 +70,36 @@ class GamePanel extends JPanel implements KeyListener, ActionListener {
         if (guy.getX() > 1369 - Guy.SIZE){
             guy.setX(1369 - Guy.SIZE);
         }
+
+
+        if(level == 1 ){
+            if (guy.getX() > spikeX - 180 && !spikemoved) {
+                spikemoved = true;
+                spikeX = spikeX - 75;
+            }
+            // check spike collisions
+            int guyLeft = (int) guy.getX();
+            int guyTop = (int) guy.getY();
+            int guyRight = guyLeft + Guy.SIZE;
+            int guyBottom = guyTop + Guy.SIZE;
+    
+            int spikeRight  = spikeX + 80;
+            int spikeBottom = 421 + 30;
+    
+            boolean hitSpike = false;
+            if (guyRight > spikeX && guyLeft < spikeRight) {
+                if (guyBottom > 421 && guyTop < spikeBottom) {
+                    hitSpike = true;
+                }
+            }
+    
+            if (hitSpike) {
+                guy.respawn();
+                spikeX = 700; 
+                spikemoved = false;
+    
+            }
+        }
     }
 
     @Override
@@ -73,8 +109,12 @@ class GamePanel extends JPanel implements KeyListener, ActionListener {
         // draw ground
         // g.setColor(new Color(60, 60, 60));
         // g.fillRect(0, 562, 700, 10);
-        g.drawImage(backImage, 0, 0, getWidth(), getHeight(), null);
-        g.drawImage(spikes, 700,421, 80,30,null);
+        if(level == 1){
+            g.drawImage(backImage, 0, 0, getWidth(), getHeight(), null);
+            g.drawImage(spikes, spikeX, 421, 80, 30, null);
+        }
+
+
         guy.draw(g);
     }
 
