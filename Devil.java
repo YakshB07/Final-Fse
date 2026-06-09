@@ -59,13 +59,6 @@ class GamePanel extends JPanel implements KeyListener, ActionListener {
 
         guy.update(dx, jump);
 
-        if (guy.getX() < 100) {
-            guy.setX(100);
-        }
-        if (guy.getX() > 1369 - Guy.SIZE) {
-            guy.setX(1369 - Guy.SIZE);
-        }
-
         levels[currentLevel].update(guy);
         
         if (levels[currentLevel].isFinished() && currentLevel < levels.length - 1) {

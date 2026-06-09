@@ -6,7 +6,7 @@ class Level1 implements Level {
     private boolean spikeMoved = false;
     private final int doorX = 1245;
     private boolean finished = false;
-    private Spike spike1 = new Spike(700, 421, 80, 30, 0);
+    private Spike spike1 = new Spike(700, 421, 80, 30);
     private Image backImage = new ImageIcon("map/map1.png").getImage();
 
     @Override
@@ -20,10 +20,14 @@ class Level1 implements Level {
     @Override
     public void update(Guy guy) {
         finished = false;
-        if (guy.getX() > spikeX - 180 && !spikeMoved) {
+        if (guy.getX() > spikeX - 180 && guy.getX() < 800) {
             spikeMoved = true;
-            spikeX -= 75;
-            spike1.move(spikeX, 421);
+            spike1.letsMove();
+            spike1.moveX(-150, -10);
+        }
+        if(guy.getX() > 900 && spikeMoved){
+            spike1.letsMove();
+            spike1.moveX(800, 20);
         }
         if (spike1.died(guy)) {
             guy.respawn();

@@ -1,7 +1,11 @@
 import java.awt.*;
 
+import javax.swing.ImageIcon;
+
 class Level2 implements Level {
     private boolean finished = false;
+    private Image backImage1 = new ImageIcon("map/map2nohole.png").getImage();
+    private Image backImage2 = new ImageIcon("map/map2.png").getImage();
 
     @Override
     public void reset() {
