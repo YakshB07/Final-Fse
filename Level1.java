@@ -8,7 +8,6 @@ class Level1 implements Level {
     private boolean finished = false;
     private Spike spike1 = new Spike(700, 421, 80, 30, 0);
     private Image backImage = new ImageIcon("map/map1.png").getImage();
-    private Image spikesImg = new ImageIcon("spike.png").getImage();
 
     @Override
     public void reset() {
@@ -40,7 +39,6 @@ class Level1 implements Level {
     @Override
     public void draw(Graphics g, int panelWidth, int panelHeight) {
         g.drawImage(backImage, 0, 0, panelWidth, panelHeight, null);
-        g.drawImage(spikesImg, spikeX, 421, 80, 30, null);
         spike1.draw(g);
     }
 

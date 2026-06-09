@@ -32,6 +32,7 @@ public class Spike {
     public void draw(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         g2.setColor(Color.red);
+        g2.drawImage(drawedImage, x, y, l, w, null);
         g2.drawRect(x, y, l, w);
     }
 }
