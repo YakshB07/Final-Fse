@@ -34,7 +34,7 @@ class GamePanel extends JPanel implements KeyListener, ActionListener {
     private Timer timer;
     private int currentLevel = 0;
     private Level[] levels = {new Level1(), new Level2()};
-    private Point[] spawns = {new Point(300, 416)};
+    private Point[] spawns = {new Point(300, 416), new Point(300, 465)};
 
     public GamePanel() {
         setPreferredSize(new Dimension(1500, 750));
@@ -49,6 +49,7 @@ class GamePanel extends JPanel implements KeyListener, ActionListener {
     }
 
     public void updatePlay() {
+        System.out.println("Current Level: " + (currentLevel));
         int dx = 0;
         if (keys[KeyEvent.VK_LEFT]){
             dx = -1;
