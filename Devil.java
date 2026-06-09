@@ -34,6 +34,7 @@ class GamePanel extends JPanel implements KeyListener, ActionListener {
     private Timer timer;
     private int currentLevel = 0;
     private Level[] levels = {new Level1(), new Level2()};
+    private Point[] spawns = {new Point(300, 416)};
 
     public GamePanel() {
         setPreferredSize(new Dimension(1500, 750));
@@ -63,8 +64,10 @@ class GamePanel extends JPanel implements KeyListener, ActionListener {
         
         if (levels[currentLevel].isFinished() && currentLevel < levels.length - 1) {
             currentLevel++;
+            guy.setspawn((int)spawns[currentLevel].getX(), (int)spawns[currentLevel].getY());
             guy.respawn();
             levels[currentLevel].reset();
+            guy.setMask("map/map" + (currentLevel + 1) + "mask.png");
         }
     }
 

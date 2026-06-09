@@ -31,7 +31,8 @@ public class Guy {
     private int frame; 
     private Image[] pics;
 
-    private BufferedImage map1mask;
+    private BufferedImage mask;
+
 
     public Guy() {
         pics = new Image[3];
@@ -41,7 +42,7 @@ public class Guy {
         fullReset();
 
         try {
-    		map1mask = ImageIO.read(new File("map/map1mask.png"));
+    		mask = ImageIO.read(new File("map/map1mask.png"));
 		} 
 		catch (IOException e) {
 			System.out.println(e);
@@ -50,8 +51,22 @@ public class Guy {
         hitbox = new Rectangle((int)x, (int)y, SIZE, SIZE);
     }
 
+    public void setMask(String file){
+        try {
+    		mask = ImageIO.read(new File(file));
+		} 
+		catch (IOException e) {
+			System.out.println(e);
+		}
+    }
+
     public Rectangle returnRect(){
         return hitbox;
+    }
+
+    public void setspawn(int xer, int yer){
+        x = xer;
+        y = yer;
     }
 
     public void respawn() {
@@ -128,13 +143,13 @@ public class Guy {
 		 * it is best to use hexadecimal. Each component is 8 bits, that is 0-256 in decimal,
 		 * or 0-FF in hex. My walls are blue in my mask. 
 		 **/
-        int maskX = x * map1mask.getWidth() / 1500;
-        int maskY = y * map1mask.getHeight() / 750;
+        int maskX = x * mask.getWidth() / 1500;
+        int maskY = y * mask.getHeight() / 750;
         
-        if(maskX < 0 || maskX >= map1mask.getWidth() || maskY < 0 || maskY >= map1mask.getHeight()){
+        if(maskX < 0 || maskX >= mask.getWidth() || maskY < 0 || maskY >= mask.getHeight()){
             return false;
         }
-        int c = map1mask.getRGB(maskX, maskY);
+        int c = mask.getRGB(maskX, maskY);
         return c != WALL;
     }
 

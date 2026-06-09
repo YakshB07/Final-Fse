@@ -19,6 +19,7 @@ class Level2 implements Level {
 
     @Override
     public void draw(Graphics g, int panelWidth, int panelHeight) {
+        g.drawImage(backImage1, 0, 0, panelWidth, panelHeight, null);
     }
 
     @Override
