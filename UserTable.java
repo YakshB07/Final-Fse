@@ -1,5 +1,5 @@
-import java.util.ArrayList;
 import java.io.*;
+import java.util.ArrayList;
 
 public class UserTable {
 
@@ -73,7 +73,7 @@ public class UserTable {
         return get(username) != null;
     }
 
-    public int size(){
+    public int size() {
         return size;
     }
 
@@ -87,5 +87,79 @@ public class UserTable {
             }
         }
         return list;
+    }
+
+    public ArrayList<UserData> getLeaderboard() {
+        ArrayList<UserData> finished = new ArrayList<>();
+
+        for (UserData u : allUsers()) {
+            if (u.getBestDeaths() >= 0) {
+                finished.add(u);
+            }
+        }
+
+        for (int i = 0; i < finished.size() - 1; i++) {
+            for (int j = 0; j < finished.size() - 1 - i; j++) {
+                if (finished.get(j).getBestDeaths() > finished.get(j + 1).getBestDeaths()) {
+                    UserData temp = finished.get(j);
+                    finished.set(j, finished.get(j + 1));
+                    finished.set(j + 1, temp);
+                }
+            }
+        }
+
+        return finished;
+    }
+
+    private void saveToFile() {
+        try {
+            PrintWriter writer = new PrintWriter(new FileWriter(SAVE_FILE));
+            for (UserData u : allUsers()) {
+                writer.println(u.getUsername());
+                writer.println(u.getPassword());
+                writer.println(u.getBestDeaths());
+                writer.println(u.getCurrentDeaths());
+                writer.println(u.getSavedLevel());
+                writer.println(u.getSavedX());
+                writer.println(u.getSavedY());
+            }
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("Could not save users: " + e);
+        }
+    }
+
+    private void loadFromFile() {
+        File f = new File(SAVE_FILE);
+        if (!f.exists()) {
+            return;
+        }
+
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(SAVE_FILE));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String username = line;
+                String password = reader.readLine();
+                int bestDeaths = Integer.parseInt(reader.readLine());
+                int currentDeaths = Integer.parseInt(reader.readLine());
+                int savedLevel = Integer.parseInt(reader.readLine());
+                double savedX = Double.parseDouble(reader.readLine());
+                double savedY = Double.parseDouble(reader.readLine());
+
+                UserData u = new UserData(username, password);
+                u.loadSavedData(bestDeaths, currentDeaths, savedLevel, savedX, savedY);
+
+                String key = username.toLowerCase();
+                int idx = hash(key);
+                Node newNode = new Node(key, u);
+                newNode.next = buckets[idx];
+                buckets[idx] = newNode;
+                size++;
+            }
+            reader.close();
+        } catch (IOException e) {
+            System.out.println("Could not load users: " + e);
+        }
     }
 }
