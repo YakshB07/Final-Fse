@@ -13,8 +13,8 @@ public class Devil extends JFrame {
     public Devil() {
         super("Level Devil");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        GamePanel game = new GamePanel();
-        add(game);
+        MenuePanel menue = new MenuePanel(this, users, new UserData("default", "password"));
+        add(menue);
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
