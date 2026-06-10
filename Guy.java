@@ -172,6 +172,10 @@ public class Guy {
         return velY;
     }
 
+    public double getSize(){
+        return SIZE;
+    }
+
     public boolean isOnGround() {
         return onGround;
     }
