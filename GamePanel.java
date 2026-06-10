@@ -23,7 +23,7 @@ class GamePanel extends JPanel implements KeyListener, ActionListener {
     }
 
     public void updatePlay() {
-        System.out.println("Current Level: " + (currentLevel));
+        // System.out.println("Current Level: " + (currentLevel));
         int dx = 0;
         if (keys[KeyEvent.VK_LEFT]){
             dx = -1;
