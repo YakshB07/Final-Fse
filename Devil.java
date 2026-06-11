@@ -9,8 +9,14 @@ public class Devil extends JFrame {
     public Devil() {
         super("Level Devil");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+<<<<<<< Updated upstream
         setResizable(false);
         showLogin();
+=======
+        MenuePanel menue = new MenuePanel(this, users, new UserData("default", "password"));
+        GamePanel game = new GamePanel(this, users, new UserData("bootyholedefeater", "abc123"));
+        add(game);
+>>>>>>> Stashed changes
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
