@@ -1,10 +1,9 @@
 import java.awt.*;
-
 import javax.swing.ImageIcon;
 
-class Level2 implements Level {
+class Level2 implements Devil.Level {
     private boolean finished = false;
-    private Hole hole1 = new Hole(600, 500, 0, 100, 10);
+    private Hole hole1 = new Hole(600, 400, 0, 100, 10);
     private Image backImage1 = new ImageIcon("map/map2nohole.png").getImage();
     private Image backImage2 = new ImageIcon("map/map2.png").getImage();
 

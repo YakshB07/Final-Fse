@@ -2,7 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class MenuePanel extends JPanel {
+public class MenuPanel extends JPanel {
 
     private Devil parentFrame;
     private UserTable users;
@@ -16,7 +16,7 @@ public class MenuePanel extends JPanel {
     private static final Color TEXTDIM = new Color(140, 130, 150);
     private static final Color CARDBG = new Color(18, 18, 40, 220);
 
-    public MenuePanel(Devil parentFrame, UserTable users, UserData user) {
+    public MenuPanel(Devil parentFrame, UserTable users, UserData user) {
         this.parentFrame = parentFrame;
         this.users = users;
         this.currentUser = user;
@@ -62,18 +62,18 @@ public class MenuePanel extends JPanel {
             });
             add(newBtn);
         }
-        
+
         JButton lbBtn = makeBtn("LEADERBOARD", btnFont, new Color(30, 25, 60), new Color(55, 45, 90));
-        lbBtn.setBounds(cx, hasSave ? 580 : 515, bw, bh);
+        lbBtn.setBounds(cx, 580, bw, bh);
         lbBtn.addActionListener(e -> {
-            // parentFrame.showLeaderboard(currentUser);
+            parentFrame.showLeaderboard(currentUser);
         });
         add(lbBtn);
 
         JButton logoutBtn = makeBtn("LOGOUT", logFont, new Color(20, 18, 35), new Color(35, 30, 55));
         logoutBtn.setBounds(30, 30, 130, 38);
         logoutBtn.addActionListener(e -> {
-            // parentFrame.showLogin();
+            parentFrame.showLogin();
         });
         add(logoutBtn);
     }

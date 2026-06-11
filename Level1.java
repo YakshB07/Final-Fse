@@ -1,7 +1,7 @@
 import java.awt.*;
 import javax.swing.*;
 
-class Level1 implements Level {
+class Level1 implements Devil.Level {
     private int spikeX = 700;
     private boolean spikeMoved = false;
     private final int doorX = 1245;
