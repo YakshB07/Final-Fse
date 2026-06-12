@@ -19,6 +19,7 @@ public class Guy {
     private boolean alive;
     private boolean facingLeft;
     private int lives;
+    private int holenum;
 
     private Rectangle hitbox;
 
@@ -36,6 +37,7 @@ public class Guy {
     public Guy(GamePanel game) {
         gamer = game;
         pics = new Image[3];
+        holenum = 0;
         for (int i = 0; i < 3; i++) {
             pics[i] = new ImageIcon("man/man" + i + ".png").getImage();
         }
@@ -155,22 +157,31 @@ public class Guy {
         velY += GRAVITY;
         y += velY;
 
+        // System.out.println(holenum);
+        // if (!clear((int)x, (int)(y + SIZE)) && !holes[holenum].fell(this)){ 
+        //     y = spawnY;
+        //     velY = 0;
+        //     if(holenum + 1 <= holes.length - 1){
+        //         holenum += 1;
+        //     }
+        //     onGround = true;
+        // }
 
-        if (!clear((int)x, (int)(y + SIZE)) && !hole.fell(this)) {
+        boolean goon = false;
+        for(Hole hole : holes){
+            if(!clear((int)x, (int)(y + SIZE)) && !hole.fell(this)){
+                goon = true;
+            }
+            else{
+                goon = false;
+                break;
+            }
+        }
+
+        if(goon){
             y = spawnY;
             velY = 0;
             onGround = true;
-        }
-
-        for(Hole hole : holes){
-            if(!clear((int)x, (int)(y + SIZE)) || !hole.fell(this)){
-                y = spawnY;
-                velY = 0;
-                onGround = true;
-            }
-            else{
-                
-            }
         }
 
         if (!onGround) {
@@ -208,6 +219,10 @@ public class Guy {
 
     public boolean returnJump(){
         return gamer.returnJump();
+    }
+
+    public void updateHolenum(){
+        holenum++;
     }
 
     private boolean clear(int x, int y) {

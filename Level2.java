@@ -15,7 +15,6 @@ class Level2 implements Devil.Level {
     public void update(Guy guy) {
         finished = false;
         guy.updateHole(guy.returnDx(), guy.returnJump(), holes);
-        System.out.println("goon");
         if(guy.getX() > 400){
             holes[0].sink();
         }
