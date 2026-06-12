@@ -20,6 +20,7 @@ class Level1 implements Devil.Level {
     @Override
     public void update(Guy guy) {
         finished = false;
+        guy.update(guy.returnDx(), guy.returnJump());
         if (guy.getX() > spikeX - 180 && guy.getX() < 800) {
             spikeMoved = true;
             spike1.letsMove();

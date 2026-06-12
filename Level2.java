@@ -3,14 +3,8 @@ import javax.swing.ImageIcon;
 
 class Level2 implements Devil.Level {
     private boolean finished = false;
-<<<<<<< Updated upstream
-    private Hole hole1 = new Hole(600, 400, 0, 100, 10);
-    private Image backImage1 = new ImageIcon("map/map2nohole.png").getImage();
-    private Image backImage2 = new ImageIcon("map/map2.png").getImage();
-=======
-    private Hole hole1 = new Hole(600, 500, 0, 100, 10);
+    private Hole [] holes = {new Hole(600, 400, 0, 100, 10), new Hole(800, 400, 0, 100, 10)};
     private Image backImage1 = new ImageIcon("map/map2.png").getImage();
->>>>>>> Stashed changes
 
     @Override
     public void reset() {
@@ -20,15 +14,22 @@ class Level2 implements Devil.Level {
     @Override
     public void update(Guy guy) {
         finished = false;
+        guy.updateHole(guy.returnDx(), guy.returnJump(), holes);
+        System.out.println("goon");
         if(guy.getX() > 400){
-            hole1.sink();
+            holes[0].sink();
+        }
+        if(guy.getX() > 700){
+            holes[1].sink();
         }
     }
 
     @Override
     public void draw(Graphics g, int panelWidth, int panelHeight) {
         g.drawImage(backImage1, 0, 0, panelWidth, panelHeight, null);
-        hole1.draw(g);
+        for(Hole hole : holes){
+            hole.draw(g);
+        }
     }
 
     @Override

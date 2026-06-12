@@ -31,7 +31,10 @@ public class Guy {
     private int spawnX = 300;
     private int spawnY = 416;
 
-    public Guy() {
+    private GamePanel gamer;
+
+    public Guy(GamePanel game) {
+        gamer = game;
         pics = new Image[3];
         for (int i = 0; i < 3; i++) {
             pics[i] = new ImageIcon("man/man" + i + ".png").getImage();
@@ -129,6 +132,82 @@ public class Guy {
         }
 
         hitbox = new Rectangle((int)x, (int)y, SIZE, SIZE);
+    }
+
+    public void updateHole(int dx, boolean jump, Hole [] holes) {
+        if (!alive) {
+            return;
+        }
+
+        for(Hole hole : holes){
+            if (dx != 0 && (clear((int)(x + dx * WALK_SPEED), (int)y) || hole.fell(this))) {
+                x += dx * WALK_SPEED;
+                facingLeft = (dx < 0);
+                break;
+            }
+        }
+
+        if (jump && onGround) {
+            velY = JUMP_POWER;
+            onGround = false;
+        }
+
+        velY += GRAVITY;
+        y += velY;
+
+
+        if (!clear((int)x, (int)(y + SIZE)) && !hole.fell(this)) {
+            y = spawnY;
+            velY = 0;
+            onGround = true;
+        }
+
+        for(Hole hole : holes){
+            if(!clear((int)x, (int)(y + SIZE)) || !hole.fell(this)){
+                y = spawnY;
+                velY = 0;
+                onGround = true;
+            }
+            else{
+                
+            }
+        }
+
+        if (!onGround) {
+            if (velY < 0) {
+                frame = 2;
+            } else {
+                frame = 1;
+            }
+        } else if (dx != 0) {
+            walkTick = (walkTick + 1) % 28;
+            if (walkTick < 7) {
+                frame = 1;
+            } else if (walkTick < 14) {
+                frame = 2;
+            } else if (walkTick < 21) {
+                frame = 1;
+            } else {
+                frame = 2;
+            }
+        } else {
+            frame = 1;
+            walkTick = 0;
+        }
+
+        if(y > 750 - SIZE){
+            respawn();
+        }
+
+        hitbox = new Rectangle((int)x, (int)y, SIZE, SIZE);
+    }
+
+    public int returnDx(){
+        return gamer.returnDx();
+    }
+
+    public boolean returnJump(){
+        return gamer.returnJump();
     }
 
     private boolean clear(int x, int y) {

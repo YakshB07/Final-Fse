@@ -6,13 +6,15 @@ class GamePanel extends JPanel implements KeyListener, ActionListener {
     private Devil parentFrame;
     private UserTable users;
     private UserData currentUser;
-    private Guy guy = new Guy();
+    private Guy guy = new Guy(this);
     private boolean[] keys = new boolean[2000];
     private Timer timer;
     private int currentLevel = 0;
     private Devil.Level[] levels = {new Level1(), new Level2()};
     private Point[] spawns = {new Point(300, 416), new Point(300, 465)};
     private boolean paused = false;
+    private int dx = 0;
+    private boolean jump;
 
 
    public GamePanel(Devil parentFrame, UserTable users, UserData currentUser) {
@@ -168,16 +170,17 @@ class GamePanel extends JPanel implements KeyListener, ActionListener {
 
     public void updatePlay() {
         // System.out.println("Current Level: " + (currentLevel));
-        int dx = 0;
+        dx = 0;
         if (keys[KeyEvent.VK_LEFT]){
             dx = -1;
         }
         if (keys[KeyEvent.VK_RIGHT]){
             dx = 1;
         }
-        boolean jump = keys[KeyEvent.VK_UP];
+        
+        jump = keys[KeyEvent.VK_UP];
 
-        guy.update(dx, jump);
+        // guy.update(dx, jump);
 
         levels[currentLevel].update(guy);
         
@@ -271,6 +274,14 @@ class GamePanel extends JPanel implements KeyListener, ActionListener {
 
         revalidate();
         repaint();
+    }
+    
+    public int returnDx(){
+        return dx;
+    }
+
+    public boolean returnJump(){
+        return jump;
     }
 
     protected void paintComponent(Graphics g) {
