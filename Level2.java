@@ -3,8 +3,9 @@ import javax.swing.ImageIcon;
 
 class Level2 implements Devil.Level {
     private boolean finished = false;
-    private Hole [] holes = {new Hole(600, 400, 0, 100, 10), new Hole(800, 400, 0, 100, 10)};
+    private Hole [] holes = {new Hole(600, 400, 0, 100, 20), new Hole(800, 400, 0, 100, 20)};
     private Image backImage1 = new ImageIcon("map/map2.png").getImage();
+    private final int doorX = 1120;
 
     @Override
     public void reset() {
@@ -14,12 +15,15 @@ class Level2 implements Devil.Level {
     @Override
     public void update(Guy guy) {
         finished = false;
-        guy.updateHole(guy.returnDx(), guy.returnJump(), holes);
-        if(guy.getX() > 400){
+        guy.updateHole(guy.returnDx(), guy.returnJump(), holes); 
+        if(guy.getX() > 525){
             holes[0].sink();
         }
         if(guy.getX() > 700){
             holes[1].sink();
+        }
+        if(guy.getX() > doorX){
+            finished = true;
         }
     }
 

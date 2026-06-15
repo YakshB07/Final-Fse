@@ -20,6 +20,7 @@ public class Guy {
     private boolean facingLeft;
     private int lives;
     private int holenum;
+    private boolean died;
 
     private Rectangle hitbox;
 
@@ -142,7 +143,7 @@ public class Guy {
         }
 
         for(Hole hole : holes){
-            if (dx != 0 && (clear((int)(x + dx * WALK_SPEED), (int)y) || hole.fell(this))) {
+            if (dx != 0 && (clear((int)(x + dx * WALK_SPEED), (int)y) && !hole.fell(this))) {
                 x += dx * WALK_SPEED;
                 facingLeft = (dx < 0);
                 break;
@@ -169,7 +170,7 @@ public class Guy {
 
         boolean goon = false;
         for(Hole hole : holes){
-            if(!clear((int)x, (int)(y + SIZE)) && !hole.fell(this)){
+            if((!clear((int)(x), (int)(y + SIZE)) && !hole.fell(this))){
                 goon = true;
             }
             else{
@@ -208,6 +209,10 @@ public class Guy {
 
         if(y > 750 - SIZE){
             respawn();
+            for(Hole hole : holes){
+                System.out.println("doing");
+                hole.reset();
+            }
         }
 
         hitbox = new Rectangle((int)x, (int)y, SIZE, SIZE);
@@ -260,6 +265,10 @@ public class Guy {
 
     public double getY() {
         return y;
+    }
+
+    public Rectangle getHitbox(){
+        return hitbox;
     }
 
     public double getVelY() {
