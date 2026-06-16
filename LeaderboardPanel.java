@@ -191,7 +191,6 @@ public class LeaderboardPanel extends JPanel {
             g2.setFont(new Font("Courier New", Font.BOLD, 18));
             if (isMe) {
                 g2.setColor(ACCENT2);
-                g2.drawString(u.getUsername() + "  <- you", cardX + 110, rowY + 18);
             } else {
                 g2.setColor(TEXT_MAIN);
                 g2.drawString(u.getUsername(), cardX + 110, rowY + 18);

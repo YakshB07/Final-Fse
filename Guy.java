@@ -20,6 +20,7 @@ public class Guy {
     private boolean facingLeft;
     private int lives;
     private int holenum;
+    private boolean died;
 
     private Rectangle hitbox;
 
@@ -97,18 +98,28 @@ public class Guy {
             facingLeft = (dx < 0);
         }
 
+        if(!clear((int)x, (int)(y + SIZE))) {
+            // y = spawnY;
+            velY = 0;
+            onGround = true;
+        }
+        else{
+            velY += GRAVITY;
+            onGround = false;
+        }
+
         if (jump && onGround) {
             velY = JUMP_POWER;
             onGround = false;
         }
 
-        velY += GRAVITY;
-        y += velY;
-
-        if (!clear((int)x, (int)(y + SIZE))) {
-            y = spawnY;
-            velY = 0;
-            onGround = true;
+        if(clear((int)x, (int)(y + SIZE + velY))){
+            y += velY;
+        }
+        else{
+            while(clear((int)x, (int)(y + SIZE))){
+                y++;
+            }
         }
 
         if (!onGround) {
@@ -142,13 +153,13 @@ public class Guy {
         }
 
         for(Hole hole : holes){
-            if (dx != 0 && (clear((int)(x + dx * WALK_SPEED), (int)y) || hole.fell(this))) {
+            if (dx != 0 && (clear((int)(x + dx * WALK_SPEED), (int)y) && !hole.fell(this))) {
                 x += dx * WALK_SPEED;
                 facingLeft = (dx < 0);
                 break;
             }
         }
-
+        
         if (jump && onGround) {
             velY = JUMP_POWER;
             onGround = false;
@@ -169,7 +180,7 @@ public class Guy {
 
         boolean goon = false;
         for(Hole hole : holes){
-            if(!clear((int)x, (int)(y + SIZE)) && !hole.fell(this)){
+            if((!clear((int)(x), (int)(y + SIZE)) && !hole.fell(this))){
                 goon = true;
             }
             else{
@@ -208,6 +219,10 @@ public class Guy {
 
         if(y > 750 - SIZE){
             respawn();
+            for(Hole hole : holes){
+                System.out.println("doing");
+                hole.reset();
+            }
         }
 
         hitbox = new Rectangle((int)x, (int)y, SIZE, SIZE);
@@ -260,6 +275,10 @@ public class Guy {
 
     public double getY() {
         return y;
+    }
+
+    public Rectangle getHitbox(){
+        return hitbox;
     }
 
     public double getVelY() {

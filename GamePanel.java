@@ -12,8 +12,8 @@ class GamePanel extends JPanel implements KeyListener, ActionListener {
     private boolean[] keys = new boolean[2000];
     private Timer timer;
     private int currentLevel = 0;
-    private Devil.Level[] levels = {new Level1(), new Level2()};
-    private Point[] spawns = {new Point(300, 416), new Point(300, 465)};
+    private Devil.Level[] levels = {new Level1(), new Level2(), new Level3()};
+    private Point[] spawns = {new Point(300, 416), new Point(300, 465), new Point(900, 200)};
     private boolean paused = false;
     private int dx = 0;
     private boolean jump = false;
@@ -32,6 +32,9 @@ class GamePanel extends JPanel implements KeyListener, ActionListener {
         currentLevel = currentUser.getSavedLevel() - 1;
         if (currentLevel < 0) {
             currentLevel = 0;
+        }
+        if (currentLevel >= levels.length) {
+            currentLevel = levels.length - 1;
         }
 
         Point spawn = spawns[currentLevel];
@@ -200,10 +203,8 @@ class GamePanel extends JPanel implements KeyListener, ActionListener {
         if (keys[KeyEvent.VK_RIGHT]) {
             dx = 1;
         }
-
         jump = keys[KeyEvent.VK_UP];
 
-        guy.update(dx, jump);
         levels[currentLevel].update(guy);
 
         if (levels[currentLevel].playerDied()) {
@@ -329,7 +330,6 @@ class GamePanel extends JPanel implements KeyListener, ActionListener {
         g2.setFont(new Font("Courier New", Font.BOLD, 22));
         FontMetrics fm = g2.getFontMetrics();
         int textX = (getWidth() - fm.stringWidth(deathStr)) / 2;
-
         g2.setColor(new Color(0, 0, 0, 100));
         g2.drawString(deathStr, textX + 2, 32);
         g2.setColor(Color.WHITE);
