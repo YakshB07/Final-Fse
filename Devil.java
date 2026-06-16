@@ -25,7 +25,7 @@ public class Devil extends JFrame {
     }
 
     public void showLeaderboard(UserData user) {
-        // swapPanel(new LeaderboardPanel(this, users, user));
+        swapPanel(new LeaderboardPanel(this, users, user));
     }
 
     public void startGame(UserData user) {
@@ -49,9 +49,10 @@ public class Devil extends JFrame {
     }
 
     interface Level {
-        public void reset();
-        public void update(Guy guy);
-        public void draw(Graphics g, int panelWidth, int panelHeight);
-        public boolean isFinished();
+        void reset();
+        void update(Guy guy);
+        void draw(Graphics g, int panelWidth, int panelHeight);
+        boolean isFinished();
+        boolean playerDied();
     }
 }

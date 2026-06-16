@@ -1,12 +1,8 @@
 import java.awt.*;
-import javax.swing.*;
 
 public class Hole {
-    private int x;
-    private int y;
-    private int l;
-    private int w;
-    private int speed;
+    private int x,y,l, w, speed, dir;
+    private boolean sinking = false;
     private Rectangle hitbox;
 
     private static final Color holer = new Color(243, 187, 102);
@@ -25,15 +21,10 @@ public class Hole {
     }
 
     public void sink(){
-        if(hitbox.getY() + hitbox.getHeight() <= 1000){
+        if(hitbox.getX() + hitbox.getHeight() <= 1000){
             l += speed;
             hitbox = new Rectangle(x, y, w, l);
         }
-    }
-
-    public void reset(){
-        l = 0;
-        hitbox = new Rectangle(x, y, w, l);
     }
 
     public boolean fell(Guy guy){
