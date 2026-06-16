@@ -11,7 +11,7 @@ class GamePanel extends JPanel implements KeyListener, ActionListener {
     private Timer timer;
     private int currentLevel = 0;
     private Devil.Level[] levels = {new Level1(), new Level2(), new Level3()};
-    private Point[] spawns = {new Point(300, 416), new Point(300, 465), new Point(0, 0)};
+    private Point[] spawns = {new Point(300, 416), new Point(300, 465), new Point(900, 200)};
     private boolean paused = false;
     private int dx = 0;
     private boolean jump;

@@ -98,18 +98,28 @@ public class Guy {
             facingLeft = (dx < 0);
         }
 
+        if(!clear((int)x, (int)(y + SIZE))) {
+            // y = spawnY;
+            velY = 0;
+            onGround = true;
+        }
+        else{
+            velY += GRAVITY;
+            onGround = false;
+        }
+
         if (jump && onGround) {
             velY = JUMP_POWER;
             onGround = false;
         }
 
-        velY += GRAVITY;
-        y += velY;
-
-        if (!clear((int)x, (int)(y + SIZE))) {
-            y = spawnY;
-            velY = 0;
-            onGround = true;
+        if(clear((int)x, (int)(y + SIZE + velY))){
+            y += velY;
+        }
+        else{
+            while(clear((int)x, (int)(y + SIZE))){
+                y++;
+            }
         }
 
         if (!onGround) {
@@ -149,7 +159,7 @@ public class Guy {
                 break;
             }
         }
-
+        
         if (jump && onGround) {
             velY = JUMP_POWER;
             onGround = false;
