@@ -93,13 +93,20 @@ public class Guy {
             return;
         }
 
-        if (dx != 0 && clear((int)(x + dx * WALK_SPEED), (int)y)) {
-            x += dx * WALK_SPEED;
-            facingLeft = (dx < 0);
+        if(dx > 0){ 
+            if(clear((int)(x + SIZE + WALK_SPEED), (int)y) && clear((int)(x + SIZE + WALK_SPEED), (int)(y + SIZE - 1))) {
+                x += WALK_SPEED;
+                facingLeft = false;
+            }
+        }
+        else if(dx < 0){ 
+            if (clear((int)(x - WALK_SPEED), (int)y) && clear((int)(x - WALK_SPEED), (int)(y + SIZE - 1))) {
+                x -= WALK_SPEED;
+                facingLeft = true;
+            }
         }
 
         if(!clear((int)x, (int)(y + SIZE))) {
-            // y = spawnY;
             velY = 0;
             onGround = true;
         }
@@ -110,6 +117,11 @@ public class Guy {
 
         if (jump && onGround) {
             velY = JUMP_POWER;
+            onGround = false;
+        }
+
+        if(jump && (!clear((int)x, (int)(y)) || !clear((int)(x + SIZE), (int)(y)))){
+            velY = GRAVITY;
             onGround = false;
         }
 
@@ -152,47 +164,53 @@ public class Guy {
             return;
         }
 
+        boolean inHole = false;
         for(Hole hole : holes){
-            if (dx != 0 && (clear((int)(x + dx * WALK_SPEED), (int)y) && !hole.fell(this))) {
-                x += dx * WALK_SPEED;
-                facingLeft = (dx < 0);
+            if(hole.fell(this)){
+                inHole = true;
                 break;
             }
         }
         
-        if (jump && onGround) {
+        if(dx > 0){ 
+            if(clear((int)(x + SIZE + WALK_SPEED), (int)y) && clear((int)(x + SIZE + WALK_SPEED), (int)(y + SIZE - 1))) {
+                x += WALK_SPEED;
+                facingLeft = false;
+            }
+        }
+        else if(dx < 0){ 
+            if (clear((int)(x - WALK_SPEED), (int)y) && clear((int)(x - WALK_SPEED), (int)(y + SIZE - 1))) {
+                x -= WALK_SPEED;
+                facingLeft = true;
+            }
+        }
+        
+        if(inHole || (clear((int)x, (int)(y + SIZE)) && clear((int)(x + SIZE), (int)(y + SIZE)))){
+            velY += GRAVITY;
+            onGround = false;
+        }
+        else if(!clear((int)x, (int)(y + SIZE)) && !clear((int)(x + SIZE), (int)(y + SIZE))){
+            velY = 0;
+            onGround = true;
+        }
+
+        if(jump && onGround && !inHole){
             velY = JUMP_POWER;
             onGround = false;
         }
 
-        velY += GRAVITY;
-        y += velY;
-
-        // System.out.println(holenum);
-        // if (!clear((int)x, (int)(y + SIZE)) && !holes[holenum].fell(this)){ 
-        //     y = spawnY;
-        //     velY = 0;
-        //     if(holenum + 1 <= holes.length - 1){
-        //         holenum += 1;
-        //     }
-        //     onGround = true;
-        // }
-
-        boolean goon = false;
-        for(Hole hole : holes){
-            if((!clear((int)(x), (int)(y + SIZE)) && !hole.fell(this))){
-                goon = true;
-            }
-            else{
-                goon = false;
-                break;
-            }
+        if(jump && (!clear((int)x, (int)(y)) || !clear((int)(x + SIZE), (int)(y)))){
+            velY = GRAVITY;
+            onGround = false;
         }
 
-        if(goon){
-            y = spawnY;
-            velY = 0;
-            onGround = true;
+        if(clear((int)x, (int)(y + SIZE + velY)) || inHole){
+            y += velY;
+        }
+        else{
+            while(clear((int)x, (int)(y + SIZE))){
+                y++;
+            }
         }
 
         if (!onGround) {
@@ -215,14 +233,6 @@ public class Guy {
         } else {
             frame = 1;
             walkTick = 0;
-        }
-
-        if(y > 750 - SIZE){
-            respawn();
-            for(Hole hole : holes){
-                System.out.println("doing");
-                hole.reset();
-            }
         }
 
         hitbox = new Rectangle((int)x, (int)y, SIZE, SIZE);

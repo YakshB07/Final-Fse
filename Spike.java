@@ -45,6 +45,25 @@ public class Spike {
         moveable = false;
     }
 
+    public void moveY(int dist, int speed){
+        if(moveable){
+            if((dist < 0 && speed < 0) || (dist > 0 && speed > 0)){
+                if(currentdist != dist){
+                    if(Math.abs((double)dist) - Math.abs((double)currentdist) > speed){
+                        y += speed;
+                        currentdist += speed;
+                    }
+                    if(Math.abs((double)dist) - Math.abs((double)currentdist) < speed && Math.abs((double)dist) - Math.abs((double)currentdist) != 0){
+                        y += dist - currentdist;
+                        currentdist = 0;
+                    }
+                }
+            }
+        }
+        hitbox = new Rectangle(x, y, l, w);
+        moveable = false;
+    }
+
     public void letsMove(){
         moveable = true;
     }

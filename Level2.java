@@ -31,6 +31,12 @@ class Level2 implements Devil.Level {
         if (guy.getX() > doorX) {
             finished = true;
         }
+        if(guy.getY() > 750 - guy.getSize()){
+            guy.respawn();
+            for(Hole hole : holes){
+                hole.reset();
+            }
+        }
     }
 
     public void draw(Graphics g, int panelWidth, int panelHeight) {
