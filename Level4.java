@@ -17,8 +17,6 @@ class Level4 implements Devil.Level {
 
     public void update(Guy guy) {
         reset();
-        System.out.println("X: " + guy.getX() + " Y: " + guy.getY());
-        System.out.println(counter);
         guy.updateHole(guy.returnDx(), guy.returnJump(), holes);
         if(guy.getY() > 100 && counter < 150){
             spike1.letsMove();

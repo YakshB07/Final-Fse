@@ -17,7 +17,6 @@ class Level3 implements Devil.Level {
 
     public void update(Guy guy) {
         reset();
-        System.out.println(guy.getX());
         guy.updateHole(guy.returnDx(), guy.returnJump(), holes);
         if (spike1.died(guy)) {
             died = true;     
